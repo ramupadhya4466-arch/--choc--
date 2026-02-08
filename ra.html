@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romantic Explosion Box</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Dancing+Script:wght@400;600;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .font-dancing { font-family: 'Dancing Script', cursive; }
+    .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 182, 193, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 182, 193, 0.6); }
+    }
+    
+    @keyframes heart-beat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.3); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.3); }
+      70% { transform: scale(1); }
+    }
+    
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    
+    @keyframes slide-up {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes fade-in-scale {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-sparkle { animation: sparkle 2s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-heart-beat { animation: heart-beat 1.5s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.8s ease-out forwards; }
+    .animate-fade-scale { animation: fade-in-scale 0.6s ease-out forwards; }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear forwards;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    
+    .layer-card {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    /* Layer 1 - Soft Pastel Pink */
+    .layer-1-bg {
+      background: linear-gradient(135deg, #fdf2f4 0%, #fce7eb 50%, #fad4db 100%);
+    }
+    
+    /* Layer 2 - Kraft Paper Vintage */
+    .layer-2-bg {
+      background: linear-gradient(135deg, #d4a574 0%, #c4956a 50%, #b8845c 100%);
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    
+    /* Layer 3 - Lavender Watercolor */
+    .layer-3-bg {
+      background: linear-gradient(135deg, #e8e0f0 0%, #d8cce8 50%, #c8b8e0 100%);
+    }
+    
+    /* Layer 4 - Deep Red Luxury */
+    .layer-4-bg {
+      background: linear-gradient(135deg, #8b1a1a 0%, #6d1515 50%, #4a0e0e 100%);
+    }
+    
+    .bokeh-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 182, 193, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .tape-clip {
+      position: absolute;
+      width: 60px;
+      height: 20px;
+      background: rgba(255, 235, 205, 0.8);
+      transform: rotate(-5deg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .watercolor-splash {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      filter: blur(30px);
+      opacity: 0.4;
+    }
+    
+    .gold-border {
+      border: 2px solid #d4af37;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+    
+    .heart-frame {
+      clip-path: path('M50 15 C 50 -5, 90 -5, 90 25 C 90 45, 50 75, 50 75 C 50 75, 10 45, 10 25 C 10 -5, 50 -5, 50 15');
+    }
+    
+    .floral-corner {
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.6;
+    }
+    
+    .doodle-decoration {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .btn-layer {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-layer:hover {
+      transform: translateY(-3px);
+    }
+    
+    .btn-layer:active {
+      transform: translateY(0);
+    }
+
+    .progress-dot {
+      transition: all 0.3s ease;
+    }
+    
+    .progress-dot.active {
+      transform: scale(1.3);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app-wrapper" class="w-full h-full overflow-auto"><!-- Main Container -->
+   <div id="main-container" class="min-h-full w-full flex flex-col items-center justify-center p-4 relative"><!-- Floating Hearts Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+     <div class="absolute top-10 left-10 text-4xl animate-float opacity-20" style="animation-delay: 0s;">
+      💕
+     </div>
+     <div class="absolute top-20 right-20 text-3xl animate-float opacity-20" style="animation-delay: 1s;">
+      💗
+     </div>
+     <div class="absolute bottom-20 left-20 text-4xl animate-float opacity-20" style="animation-delay: 2s;">
+      💖
+     </div>
+     <div class="absolute bottom-10 right-10 text-3xl animate-float opacity-20" style="animation-delay: 0.5s;">
+      💝
+     </div>
+     <div class="absolute top-1/2 left-5 text-2xl animate-float opacity-15" style="animation-delay: 1.5s;">
+      ✨
+     </div>
+     <div class="absolute top-1/3 right-5 text-2xl animate-float opacity-15" style="animation-delay: 2.5s;">
+      ✨
+     </div>
+    </div><!-- Start Screen -->
+    <div id="start-screen" class="text-center animate-fade-scale">
+     <div class="relative inline-block mb-8">
+      <div class="text-8xl animate-heart-beat">
+       🎁
+      </div>
+      <div class="absolute -top-2 -right-2 text-2xl animate-sparkle">
+       ✨
+      </div>
+      <div class="absolute -bottom-2 -left-2 text-2xl animate-sparkle" style="animation-delay: 0.5s;">
+       ✨
+      </div>
+     </div>
+     <h1 id="main-title" class="font-dancing text-4xl md:text-5xl mb-4" style="color: #c9184a;">A Special Gift For You</h1>
+     <p class="font-cormorant text-lg md:text-xl mb-8 max-w-md mx-auto" style="color: #6b7280;">This box holds memories, love, and lots of sweetness. Ready to unwrap the surprise?</p><button id="start-btn" class="btn-layer px-8 py-4 rounded-full font-playfair text-lg text-white shadow-lg animate-pulse-glow" style="background: linear-gradient(135deg, #ec4899, #be185d);"> Open The Box 💝 </button>
+    </div><!-- Layer Cards Container -->
+    <div id="layers-container" class="hidden w-full max-w-lg mx-auto"><!-- Progress Indicator -->
+     <div id="progress" class="flex justify-center gap-3 mb-6">
+      <div class="progress-dot w-3 h-3 rounded-full" style="background: #fda4af;"></div>
+      <div class="progress-dot w-3 h-3 rounded-full" style="background: #d4a574;"></div>
+      <div class="progress-dot w-3 h-3 rounded-full" style="background: #c4b5fd;"></div>
+      <div class="progress-dot w-3 h-3 rounded-full" style="background: #b91c1c;"></div>
+     </div><!-- Layer 1 - Soft Pastel Pink -->
+     <div id="layer-1" class="layer-card hidden">
+      <div class="layer-1-bg rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden"><!-- Floral Decorations -->
+       <div class="floral-corner top-2 left-2">
+        🌸
+       </div>
+       <div class="floral-corner top-2 right-2">
+        🌷
+       </div>
+       <div class="floral-corner bottom-2 left-2">
+        🌺
+       </div>
+       <div class="floral-corner bottom-2 right-2">
+        🌹
+       </div>
+       <div class="relative z-10">
+        <div class="text-center mb-4"><span class="inline-block px-4 py-1 rounded-full text-sm font-playfair" style="background: rgba(236, 72, 153, 0.2); color: #be185d;"> Layer 1 • The Surprise </span>
+        </div><!-- Photo Placeholders -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+         <div class="photo-frame aspect-square rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #fce7f3, #fbcfe8); border: 3px solid rgba(236, 72, 153, 0.3);">
+          <div class="text-center p-4">
+           <div class="text-4xl mb-2">
+            <img src="https://i.ibb.co/bggkYYcR/Whats-App-Image-2026-02-08-at-10-27-46-PM-1.jpg" alt="">
+           </div>
+           <p class="font-cormorant text-sm" style="color: #9d174d;">Classic Photo Together</p>
+          </div>
+         </div>
+         <div class="photo-frame aspect-square rounded-xl flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #fce7f3, #fbcfe8); border: 3px solid rgba(236, 72, 153, 0.3);">
+          <div class="text-center p-4">
+           <div class="text-4xl mb-2">
+            <img src="https://i.ibb.co/dJbwn4Rb/Whats-App-Image-2026-02-08-at-10-27-45-PM.jpg" alt="">
+           </div>
+           <p class="font-cormorant text-sm" style="color: #9d174d;">Your Special Moment</p>
+          </div>
+         </div>
+        </div><!-- Message -->
+        <div class="rounded-xl p-5 shadow-inner" style="background: rgba(255, 255, 255, 0.7);">
+         <p id="layer1-message" class="font-cormorant text-base md:text-lg text-center leading-relaxed" style="color: #831843;"Enjoy the first blast! 🍫✨</p>
+        </div>
+        <div class="flex justify-center mt-6"><button class="next-layer-btn btn-layer px-6 py-3 rounded-full font-playfair text-white shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, #ec4899, #be185d);"> Next Layer <span>→</span> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Layer 2 - Vintage Scrapbook -->
+     <div id="layer-2" class="layer-card hidden">
+      <div class="layer-2-bg rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden"><!-- Doodle Decorations -->
+       <div class="doodle-decoration top-4 left-4">
+        ⭐
+       </div>
+       <div class="doodle-decoration top-4 right-4" style="animation-delay: 1s;">
+        💫
+       </div>
+       <div class="doodle-decoration bottom-4 left-4" style="animation-delay: 0.5s;">
+        🌟
+       </div>
+       <div class="doodle-decoration bottom-4 right-4" style="animation-delay: 1.5s;">
+        💕
+       </div>
+       <div class="relative z-10">
+        <div class="text-center mb-4"><span class="inline-block px-4 py-1 rounded-full text-sm font-playfair" style="background: rgba(255, 255, 255, 0.4); color: #78350f;"> Layer 2 • The Journey </span>
+        </div><!-- Polaroid Style Photo -->
+        <div class="flex justify-center mb-6">
+         <div class="relative"><!-- Tape -->
+          <div class="tape-clip -top-3 left-1/2 -translate-x-1/2"></div>
+          <div class="p-3 pb-12 shadow-xl transform rotate-2" style="background: #fffef5;">
+           <div class="photo-frame w-48 h-48 flex items-center justify-center" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">
+            <div class="text-center">
+             <div class="text-5xl mb-2">
+              <img src="https://i.ibb.co/gnbc3Fy/2.jpg" alt="" srcset="">
+             </div>
+             <p class="font-dancing text-sm" style="color: #92400e;">Fun Times!</p>
+            </div>
+           </div>
+           <p class="font-dancing text-center mt-2 text-lg" style="color: #78350f;">Masti Moments 📷</p>
+          </div>
+         </div>
+        </div><!-- Message -->
+        <div class="rounded-xl p-5 shadow-lg" style="background: rgba(255, 254, 245, 0.9);">
+         <p id="layer2-message" class="font-cormorant text-base md:text-lg text-center leading-relaxed" style="color: #78350f;">Jaise ye box khul raha hai, waise hi meri life tumhare saath khul rahi hai. Har din pehle se behtar aur mitha! (Abhi aur bhi chocolates baaki hain...) 🍬💝</p>
+        </div>
+        <div class="flex justify-center mt-6"><button class="next-layer-btn btn-layer px-6 py-3 rounded-full font-playfair text-white shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, #d97706, #b45309);"> Next Layer <span>→</span> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Layer 3 - Lavender Watercolor -->
+     <div id="layer-3" class="layer-card hidden">
+      <div class="layer-3-bg rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden"><!-- Watercolor Splashes -->
+       <div class="watercolor-splash top-0 left-0" style="background: #ddd6fe;"></div>
+       <div class="watercolor-splash bottom-0 right-0" style="background: #c4b5fd;"></div><!-- Gold Border Accent -->
+       <div class="absolute inset-4 border border-amber-300 rounded-xl pointer-events-none opacity-30"></div>
+       <div class="relative z-10">
+        <div class="text-center mb-4"><span class="inline-block px-4 py-1 rounded-full text-sm font-playfair" style="background: rgba(167, 139, 250, 0.3); color: #5b21b6;"> Layer 3 • The Connection </span>
+        </div><!-- Centered Vertical Photo -->
+        <div class="flex justify-center mb-6">
+         <div class="photo-frame w-40 h-56 rounded-lg flex items-center justify-center shadow-xl gold-border" style="background: linear-gradient(135deg, #f5f3ff, #ede9fe);">
+          <div class="text-center p-4">
+           <div class="text-5xl mb-3">
+            <img src="https://i.ibb.co/5WD56Pdz/Whats-App-Image-2026-02-08-at-10-27-46-PM-2.jpg" alt="">
+           </div>
+           <p class="font-playfair text-sm" style="color: #6d28d9;">Favorite Photo</p>
+          </div>
+         </div>
+        </div><!-- Message -->
+        <div class="rounded-xl p-5 shadow-lg" style="background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(167, 139, 250, 0.3);">
+         <p id="layer3-message" class="font-cormorant text-base md:text-lg text-center leading-relaxed" style="color: #4c1d95;">Log mahengi gift dete hain, maine isme apna waqt aur dil lagaya hai. Tumhare nakhre jhelne ke liye ye chocolates energy booster hain! 💪🍫</p>
+        </div>
+        <div class="flex justify-center mt-6"><button class="next-layer-btn btn-layer px-6 py-3 rounded-full font-playfair text-white shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"> Final Layer <span>💝</span> </button>
+        </div>
+       </div>
+      </div>
+     </div><!-- Layer 4 - Deep Red Luxury -->
+     <div id="layer-4" class="layer-card hidden">
+      <div class="layer-4-bg rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden"><!-- Bokeh Overlay -->
+       <div class="bokeh-overlay"></div><!-- Gold Accents -->
+       <div class="absolute inset-4 border-2 border-amber-400 rounded-xl pointer-events-none opacity-40"></div>
+       <div class="relative z-10">
+        <div class="text-center mb-4"><span class="inline-block px-4 py-1 rounded-full text-sm font-playfair" style="background: rgba(212, 175, 55, 0.3); color: #fcd34d;"> ✨ Final Layer • The Core ✨ </span>
+        </div><!-- Heart Shaped Photo Frame -->
+        <div class="flex justify-center mb-6">
+         <div class="relative">
+          <div class="w-48 h-48 rounded-full flex items-center justify-center shadow-2xl animate-pulse-glow" style="background: linear-gradient(135deg, #fecdd3, #fda4af); border: 4px solid #d4af37;">
+           <div class="text-center">
+            <div class="text-6xl mb-2 animate-heart-beat">
+             <img src="https://i.ibb.co/wF5zgvdW/Whats-App-Image-2026-02-08-at-10-27-46-PM.jpg" alt="">
+            </div>
+            <p class="font-dancing text-lg" style="color: #881337;">Best Romantic Photo</p>
+           </div>
+          </div><!-- Sparkles -->
+          <div class="absolute -top-2 -left-2 text-2xl animate-sparkle">
+           ✨
+          </div>
+          <div class="absolute -top-2 -right-2 text-2xl animate-sparkle" style="animation-delay: 0.3s;">
+           💫
+          </div>
+          <div class="absolute -bottom-2 -left-2 text-2xl animate-sparkle" style="animation-delay: 0.6s;">
+           ⭐
+          </div>
+          <div class="absolute -bottom-2 -right-2 text-2xl animate-sparkle" style="animation-delay: 0.9s;">
+           ✨
+          </div>
+         </div>
+        </div><!-- Final Message -->
+        <div class="rounded-xl p-6 shadow-lg" style="background: rgba(0, 0, 0, 0.3); border: 2px solid rgba(212, 175, 55, 0.5);">
+         <h3 class="font-dancing text-2xl text-center mb-3" style="color: #fcd34d;">🎉 Final Surprise! 🎉</h3>
+         <p id="layer4-message" class="font-cormorant text-base md:text-lg text-center leading-relaxed text-white">I Love You! ❤️🍫</p>
+        </div>
+        <div class="flex justify-center mt-6"><button id="restart-btn" class="btn-layer px-6 py-3 rounded-full font-playfair shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, #d4af37, #b8860b); color: #1c1917;"> Open Again <span>🔄</span> </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Confetti Container -->
+  <div id="confetti-container"></div>
+  <script>
+    const defaultConfig = {
+      layer1_text: "sorry betuu chocolate day per chocolate to nhi de pya but ye webpage tumare liye h chocolate ho kha ker subha nikal bhi do gi but ye tumare pass rhe ga… kyunki chocolates khatam ho jaati hain, par jo tum mere liye ho wo kabhi khatam nahi hota.yeh chhoti si webpage meri feelings ka ek tukda hai — jab bhi miss karo, jab bhi smile chahiye, bas isse open kar lena.tumhari har hasi meri favourite chocolate se zyada meethi hai aur tumhara saath meri sabse badi gift.shayad main zyada express na kar paun, par dil se tum bahut special ho betuu 🤍 hamesha aur haan, ye webpage sirf words ka collection nahi hai,isme meri care, meri warmth aur meri har wo feeling hai...jo main kabhi saamne se keh nahi paata🍫✨",
+      layer2_text: "Meri baate ajeeb lagti hogi tumko aur naa hum log itni baat karte hain ek dusre se, phir bhi tumhare message dekhte hi khushi ho jati hai. Main tumko chat par hasta nahi hoon pehle jaise, main apne dil ki baat likh deta hoon ya ye reel bhej deta hoon uske related, but call par hasta hoon, utni pyaari baate nahi kar pata na apne dil ki baat kar pata hoon us time...To ye mat samjha ki mere jazbaat badal gaye hain ya meri dilchaspi kam ho gayi hai. Sach toh ye hai ki likhte waqt mujhe thoda waqt mil jata hai khud ko sametne ka, par call par tumhari awaaz sunte hi main sab bhool jata hoon. Meri wo hasi darasal meri nervousness aur tumse baat karne ki khushi ka ek mix hota hai. Main shayad call par utna 'romantic' ya 'pyaari baatein' karne wala na ban paun, par tumhari har chhoti baat mere liye aaj bhi utni hi maaine rakhti hai jitni pehle rakhti thi. Bas mera tarika badal gaya hai, par ehsas wahi purane hain.🍬💝",
+      layer3_text: "Kabhi-kabhi main sochta hoon ki zindagi ne mujhe itna sabr kyu sikhaya… phir samajh aata hai, shayad isliye taaki jab tum meri zindagi me aao, to main tumhari kadar kar paun.Tum koi aadat nahi ho, jo waqt ke saath badal jaaye… tum wo sukoon ho jo har din thoda aur gehra ho jaata hai.Tumhari hasi sirf ek awaaz nahi, meri thakan ka ilaaj hai.Tumhari baatein sirf lafz nahi, mere din ka sabse roshan hissa hain.Agar kabhi main chup ho jaun, samajh lena main tumhe mehsoos kar raha hoon… kyunki kuch rishton ko shor ki zarurat nahi hoti, bas ehsaas hi kaafi hota hai.Tum mere liye sirf “pasand” nahi ho…tum meri duaon ka wo hissa ho, jise main har roz bina bole maangta hoon.Aur agar kabhi zindagi mushkil ho jaaye, bas itna yaad rakhna —main tumhe har haal me izzat, wafadari aur sacche dil se chahne wala insaan hoon.💪🍫",
+      layer4_text: "Tumhari bahut chinta hoti hai… tum late utho tab bhi main khud ko samjha nahi paata ki kyun itna bechain ho jaata hoon. Main jab bhi tumhare baare me sochta hoon meri heartbeat bahut tez ho jaati hai, sapne me bhi tumhe dekhu to uthne ke baad kaafi der tak dil sambhalta hi nahi. Pata nahi mere saath kya ho raha hai, par itna zaroor samajh aata hai ki ye sab isliye hai kyunki tum meri feelings ke liye bahut zyada important ho. Jab tum late uthti ho na, to main bas yehi sochta rehta hoon ki tum theek ho, tumne khana khaya ya nahi, tum thaki to nahi ho, tum khush ho na. Shayad main overthink karta hoon, par dil hai ki maanta hi nahi, jaise use tumhari aadat si ho gayi ho. Sapne me tumhe dekhta hoon to lagta hai jaise sach me mere paas thi, aur jab aankh khulti hai to ek halka sa khalipan mehsoos hota hai. Mujhe nahi pata ye sab kitna normal hai, par ek baat bilkul sach hai — mera pyaar ab bahut gehra ho chuka hai. Ye sirf pasand ya attraction nahi raha, ye meri rooh ka hissa ban gaya hai. Main tumhe sirf chahna nahi chahta, main tumhe samajhna chahta hoon, tumhara saath dena chahta hoon, tumhari har khushi me khud ko shaamil karna chahta hoon. Agar kabhi meri fikr zyada lage to bas itna samajh lena ki ye meri kamzori nahi, ye meri mohabbat ki gehraai hai. Tum meri aadat nahi ho jo waqt ke saath badal jaaye, tum wo ehsaas ho jo har din aur saccha, aur mazboot hota ja raha hai... I love you betuu❤️🍫",
+      background_color: "#fff1f2",
+      text_color: "#881337",
+      accent_color: "#ec4899",
+      surface_color: "#ffffff",
+      font_family: "Cormorant Garamond"
+    };
+
+    let currentLayer = 0;
+    const totalLayers = 4;
+
+    function createConfetti() {
+      const container = document.getElementById('confetti-container');
+      const colors = ['#ec4899', '#f472b6', '#fda4af', '#d4af37', '#fcd34d', '#c4b5fd', '#a78bfa'];
+      const shapes = ['❤️', '💕', '✨', '💫', '🎉', '💝', '🍫'];
+      
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        if (Math.random() > 0.5) {
+          confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          confetti.style.fontSize = (Math.random() * 15 + 10) + 'px';
+        } else {
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        }
+        
+        container.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    function showLayer(layerNum) {
+      // Hide all layers
+      for (let i = 1; i <= totalLayers; i++) {
+        const layer = document.getElementById(`layer-${i}`);
+        if (layer) {
+          layer.classList.add('hidden');
+        }
+      }
+      
+      // Show current layer
+      const currentLayerEl = document.getElementById(`layer-${layerNum}`);
+      if (currentLayerEl) {
+        currentLayerEl.classList.remove('hidden');
+        currentLayerEl.classList.add('animate-slide-up');
+        
+        // Remove animation class after completion
+        setTimeout(() => {
+          currentLayerEl.classList.remove('animate-slide-up');
+        }, 800);
+      }
+      
+      // Update progress dots
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, index) => {
+        if (index < layerNum) {
+          dot.classList.add('active');
+          dot.style.transform = 'scale(1.3)';
+        } else {
+          dot.classList.remove('active');
+          dot.style.transform = 'scale(1)';
+        }
+      });
+      
+      // Confetti on final layer
+      if (layerNum === 4) {
+        createConfetti();
+        setTimeout(createConfetti, 500);
+        setTimeout(createConfetti, 1000);
+      }
+    }
+
+    function nextLayer() {
+      if (currentLayer < totalLayers) {
+        currentLayer++;
+        showLayer(currentLayer);
+        createConfetti();
+      }
+    }
+
+    function startExperience() {
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('layers-container').classList.remove('hidden');
+      currentLayer = 1;
+      showLayer(1);
+      createConfetti();
+    }
+
+    function restart() {
+      currentLayer = 0;
+      document.getElementById('layers-container').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('start-screen').classList.add('animate-fade-scale');
+      
+      // Reset progress
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach(dot => {
+        dot.classList.remove('active');
+        dot.style.transform = 'scale(1)';
+      });
+    }
+
+    async function onConfigChange(config) {
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'Georgia, serif';
+      
+      // Update layer messages
+      const layer1Msg = document.getElementById('layer1-message');
+      if (layer1Msg) {
+        layer1Msg.textContent = config.layer1_text || defaultConfig.layer1_text;
+        layer1Msg.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      }
+      
+      const layer2Msg = document.getElementById('layer2-message');
+      if (layer2Msg) {
+        layer2Msg.textContent = config.layer2_text || defaultConfig.layer2_text;
+        layer2Msg.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      }
+      
+      const layer3Msg = document.getElementById('layer3-message');
+      if (layer3Msg) {
+        layer3Msg.textContent = config.layer3_text || defaultConfig.layer3_text;
+        layer3Msg.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      }
+      
+      const layer4Msg = document.getElementById('layer4-message');
+      if (layer4Msg) {
+        layer4Msg.textContent = config.layer4_text || defaultConfig.layer4_text;
+        layer4Msg.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      }
+      
+      // Apply background color
+      const bgColor = config.background_color || defaultConfig.background_color;
+      document.getElementById('main-container').style.backgroundColor = bgColor;
+      
+      // Apply text colors
+      const textColor = config.text_color || defaultConfig.text_color;
+      const mainTitle = document.getElementById('main-title');
+      if (mainTitle) mainTitle.style.color = textColor;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            if (window.elementSdk) window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["layer1_text", config.layer1_text || defaultConfig.layer1_text],
+        ["layer2_text", config.layer2_text || defaultConfig.layer2_text],
+        ["layer3_text", config.layer3_text || defaultConfig.layer3_text],
+        ["layer4_text", config.layer4_text || defaultConfig.layer4_text]
+      ]);
+    }
+
+    // Initialize
+    function init() {
+      // Event Listeners
+      document.getElementById('start-btn').addEventListener('click', startExperience);
+      document.getElementById('restart-btn').addEventListener('click', restart);
+      
+      document.querySelectorAll('.next-layer-btn').forEach(btn => {
+        btn.addEventListener('click', nextLayer);
+      });
+
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      } else {
+        onConfigChange(defaultConfig);
+      }
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9caadae0949a3b2d',t:'MTc3MDU1MDg1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html
